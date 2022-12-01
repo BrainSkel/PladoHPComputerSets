@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using PladoHPComputerSets.Models;
 
 namespace PladoHPComputerSets.Data
 {
@@ -9,5 +10,6 @@ namespace PladoHPComputerSets.Data
             : base(options)
         {
         }
+        public DbSet<PladoHPComputerSets.Models.ComputerOrder> ComputerOrder { get; set; }
     }
 }
