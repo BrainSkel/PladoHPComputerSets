@@ -157,5 +157,27 @@ namespace PladoHPComputerSets.Controllers
         {
           return _context.ComputerOrder.Any(e => e.Id == id);
         }
+
+        // GET: ComputerOrders/CreateNew
+        public IActionResult CreateNew()
+        {
+            return View();
+        }
+
+        // POST: ComputerOrders/CreateNew
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateNew([Bind("Id,OrdererName,Description,Price,Type,Case,Monitor,Packed")] ComputerOrder computerOrder)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(computerOrder);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(computerOrder);
+        }
     }
 }

@@ -11,5 +11,6 @@ namespace PladoHPComputerSets.Data
         {
         }
         public DbSet<PladoHPComputerSets.Models.ComputerOrder> ComputerOrder { get; set; }
+        public DbSet<PladoHPComputerSets.Models.ComputerOrderReview> ComputerOrderReview { get; set; }
     }
 }
