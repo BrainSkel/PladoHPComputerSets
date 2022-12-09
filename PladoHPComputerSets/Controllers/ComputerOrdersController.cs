@@ -27,6 +27,31 @@ namespace PladoHPComputerSets.Controllers
               return View(await _context.ComputerOrder.ToListAsync());
         }
 
+        public async Task<IActionResult> TrackOrder(string searchTerm = null)
+        {
+
+            var model = _context.ComputerOrder
+                .Where(r => r.Packed.Equals(false))
+                .Select(r => new ComputerOrder
+                {
+                    Id = r.Id,
+                    OrdererName = r.OrdererName,
+                    Description = r.Description,
+                    Type = r.Type,
+                    Case = r.Case,
+                    Monitor = r.Monitor,
+                    Packed = r.Packed
+
+                }
+                );
+
+                //if (Request.IsAjaxRequest())
+                //{
+                //    return PartialView("_Restaurants", model);
+                //}
+            return View(model);
+        }
+
         // GET: ComputerOrders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -177,7 +202,7 @@ namespace PladoHPComputerSets.Controllers
             {
                 _context.Add(computerOrder);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(CreateNew));
             }
             return View(computerOrder);
         }
