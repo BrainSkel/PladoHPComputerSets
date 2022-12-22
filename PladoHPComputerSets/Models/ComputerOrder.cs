@@ -7,8 +7,9 @@ namespace PladoHPComputerSets.Models
 
         public int Id { get; set; }
         [Display(Name = "Orderer Name")]
+        [DisplayFormat(NullDisplayText = "Anonymous")]
         [StringLength(20)]
-        public string? OrdererName { get; set; } = "Annonymous";
+        public string? OrdererName { get; set; }
 
         [StringLength(200)]
         public string? Description { get; set; }
@@ -20,8 +21,6 @@ namespace PladoHPComputerSets.Models
         public string? Type { get; set; }
         public bool Case { get; set; }
         public bool Monitor { get; set; }
-
-
         public bool Packed { get; set; }
 
     }

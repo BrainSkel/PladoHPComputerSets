@@ -1,0 +1,18 @@
+﻿@model PladoHPComputerSets.Models.ViewModels.ComputerOrderStastisticsViewModel
+
+@{
+    ViewData["Title"] = "Show Stats for Exams";
+    ComputerOrder first = Model.NotCompletedOrders.FirstOrDefault()??
+                Model.CompletedOrders.FirstOrDefault()??
+                new ComputerOrder();
+}
+
+<h1>Statistics</h1>
+
+<h2>Completed</h2>
+
+<partial name="_TableView" model="Model.NotCompletedOrders" />
+
+<h2>Incomplete</h2>
+
+<partial name="_TableView" model="Model.CompletedOrders" />

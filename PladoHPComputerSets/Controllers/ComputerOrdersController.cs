@@ -8,12 +8,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PladoHPComputerSets.Data;
 using PladoHPComputerSets.Models;
+using PladoHPComputerSets.Models.ViewModels;
 
 namespace PladoHPComputerSets.Controllers
 {
     public class ComputerOrdersController : Controller
     {
         private readonly ApplicationDbContext _context;
+
+        public List<ComputerOrder> ShowCompletedOrders { get; private set; }
+        public List<ComputerOrder> ShowNotCompletedOrders { get; private set; }
 
         public ComputerOrdersController(ApplicationDbContext context)
         {
@@ -27,7 +31,7 @@ namespace PladoHPComputerSets.Controllers
               return View(await _context.ComputerOrder.ToListAsync());
         }
 
-        public async Task<IActionResult> TrackOrder(string searchTerm = null)
+        public async Task<IActionResult> TrackOrder()
         {
 
             var model = _context.ComputerOrder
@@ -44,12 +48,30 @@ namespace PladoHPComputerSets.Controllers
 
                 }
                 );
-
-                //if (Request.IsAjaxRequest())
-                //{
-                //    return PartialView("_Restaurants", model);
-                //}
             return View(model);
+        }
+
+
+        public async Task<IActionResult> StastisticAsync()
+        {
+
+
+            var notCompletedOrders = await _context.ComputerOrder
+                .Where(ex => ex.Packed != null)
+                .ToListAsync();
+
+            var completedOrders = await _context.ComputerOrder
+                .Where(r => r.Packed.Equals(true))
+                .ToListAsync();
+
+
+            var result = new ComputerOrderStastisticsViewModel()
+            {
+                CompletedOrders = completedOrders,
+                NotCompletedOrders = notCompletedOrders
+            };
+
+            return View(result);
         }
 
         // GET: ComputerOrders/Details/5
@@ -202,7 +224,7 @@ namespace PladoHPComputerSets.Controllers
             {
                 _context.Add(computerOrder);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(CreateNew));
+                return RedirectToAction(nameof(TrackOrder));
             }
             return View(computerOrder);
         }

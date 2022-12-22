@@ -257,7 +257,7 @@ namespace PladoHPComputerSets.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ComputerOrder");
+                    b.ToTable("ComputerOrder", (string)null);
                 });
 
             modelBuilder.Entity("PladoHPComputerSets.Models.ComputerOrderReview", b =>
@@ -291,7 +291,7 @@ namespace PladoHPComputerSets.Data.Migrations
 
                     b.HasIndex("ComputerOrderReviewId");
 
-                    b.ToTable("ComputerOrderReview");
+                    b.ToTable("ComputerOrderReview", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
