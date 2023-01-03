@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using PladoHPComputerSets.Data;
 using PladoHPComputerSets.Models;
@@ -49,27 +50,46 @@ namespace PladoHPComputerSets.Controllers
                 }
                 );
             return View(model);
+
         }
 
 
         public async Task<IActionResult> StastisticAsync()
         {
 
-
             var notCompletedOrders = await _context.ComputerOrder
-                .Where(ex => ex.Packed != null)
+                .Where(r => r.Packed != null)
                 .ToListAsync();
 
             var completedOrders = await _context.ComputerOrder
                 .Where(r => r.Packed.Equals(true))
                 .ToListAsync();
 
+            var completedAmount = await _context.ComputerOrder
+                .Where(r => r.Packed.Equals(true))
+                .CountAsync();
+
+
+            int totalOrders = _context.ComputerOrder.Count();
+
+            int totalCompletedOrders = _context.ComputerOrder
+                .Where(r => r.Packed.Equals(true))
+                .Count();
+
+
+
+
+
+
+
 
             var result = new ComputerOrderStastisticsViewModel()
-            {
-                CompletedOrders = completedOrders,
-                NotCompletedOrders = notCompletedOrders
-            };
+                {
+                    CompletedOrders = completedOrders,
+                    NotCompletedOrders = notCompletedOrders,
+                    TotalOrders = totalOrders,
+                    TotalCompletedOrders = totalCompletedOrders
+        };
 
             return View(result);
         }
