@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCore.Unobtrusive.Ajax;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -32,11 +33,13 @@ namespace PladoHPComputerSets.Controllers
               return View(await _context.ComputerOrder.ToListAsync());
         }
 
-        public async Task<IActionResult> TrackOrder()
+        public async Task<IActionResult> TrackOrder(string searchTerm = null)
         {
 
             var model = _context.ComputerOrder
+                .OrderByDescending(r => r.OrdererName)
                 .Where(r => r.Packed.Equals(false))
+                .Where( r => searchTerm == null || r.OrdererName.StartsWith(searchTerm))
                 .Select(r => new ComputerOrder
                 {
                     Id = r.Id,
@@ -93,6 +96,26 @@ namespace PladoHPComputerSets.Controllers
 
             return View(result);
         }
+
+
+
+
+
+        public ActionResult Search(string searchString = null)
+        {
+            var records = from r in _context.ComputerOrder
+                          select r;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                records = records.Where(s => s.OrdererName.Contains(searchString));
+            }
+
+            return View(records);
+        }
+
+
+
 
         // GET: ComputerOrders/Details/5
         public async Task<IActionResult> Details(int? id)

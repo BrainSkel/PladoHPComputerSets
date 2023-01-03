@@ -6,6 +6,18 @@
 
 <h1>Track Orders</h1>
 
+<h3>Search order by orderer name</h3>
+
+<p>
+    @using (Html.BeginForm("TrackOrder", "ComputerOrders", FormMethod.Get))
+    {
+        <p>
+            Search: @Html.TextBox("searchTerm")
+            <input type="submit" value="Search" />
+        </p>
+    }
+</p>
+
 <table class="table">
     <thead>
         <tr>
