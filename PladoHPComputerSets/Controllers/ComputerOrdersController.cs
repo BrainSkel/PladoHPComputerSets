@@ -28,7 +28,7 @@ namespace PladoHPComputerSets.Controllers
 
         // GET: ComputerOrders
         [Authorize(Policy = "RequireAdminRole")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Orders()
         {
               return View(await _context.ComputerOrder.ToListAsync());
         }
@@ -154,13 +154,13 @@ namespace PladoHPComputerSets.Controllers
             {
                 _context.Add(computerOrder);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Orders));
             }
             return View(computerOrder);
         }
 
         // GET: ComputerOrders/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Orders_edit(int? id)
         {
             if (id == null || _context.ComputerOrder == null)
             {
@@ -181,7 +181,7 @@ namespace PladoHPComputerSets.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OrdererName,Description,Price,Type,Case,Monitor,Packed")] ComputerOrder computerOrder)
+        public async Task<IActionResult> Orders_Edit(int id, [Bind("Id,OrdererName,Description,Price,Type,Case,Monitor,Packed")] ComputerOrder computerOrder)
         {
             if (id != computerOrder.Id)
             {
@@ -206,14 +206,14 @@ namespace PladoHPComputerSets.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Orders));
             }
             return View(computerOrder);
         }
 
         // GET: ComputerOrders/Delete/5
         [Authorize(Policy = "RequireAdminRole")]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Orders_delete(int? id)
         {
             if (id == null || _context.ComputerOrder == null)
             {
@@ -246,7 +246,7 @@ namespace PladoHPComputerSets.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Orders));
         }
 
         private bool ComputerOrderExists(int id)
