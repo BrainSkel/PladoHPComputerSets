@@ -2,46 +2,50 @@
 <table class="table">
  <thead>
   <tr>
-   <th>
+            <th>
                 @Html.DisplayNameFor(model => model.OrdererName)
-   </th>
-   <th>
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Description)
-   </th>
-   <th>
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Price)
-   </th>
-      <th>
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Type)
-   </th>
-   <th>
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Case)
-   </th>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Monitor)
+            </th>
    <th></th>
   </tr>
  </thead>
  <tbody>
         @foreach (var item in Model)
         {
-      <tr>
-       <td>
-                    @Html.DisplayFor(modelItem => item.OrdererName)
-       </td>
-       <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-       </td>
-       <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-       </td>
-       <td>
-                    @Html.DisplayFor(modelItem => item.Type)
-       </td>
-       <td>
-                    @Html.DisplayFor(modelItem => item.Case)
-       </td>
-       <td>
-       </td>
-      </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrdererName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Case)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Monitor)
+            </td>
+        </tr>
         }
  </tbody>
 </table>

@@ -46,6 +46,7 @@ namespace PladoHPComputerSets.Controllers
                     OrdererName = r.OrdererName,
                     Description = r.Description,
                     Type = r.Type,
+                    Price = r.Price,
                     Case = r.Case,
                     Monitor = r.Monitor,
                     Packed = r.Packed
@@ -56,7 +57,7 @@ namespace PladoHPComputerSets.Controllers
 
         }
 
-
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> StastisticAsync()
         {
 
