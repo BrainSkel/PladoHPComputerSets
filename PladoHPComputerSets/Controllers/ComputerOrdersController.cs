@@ -27,7 +27,7 @@ namespace PladoHPComputerSets.Controllers
         }
 
         // GET: ComputerOrders
-        [Authorize]
+        [Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> Index()
         {
               return View(await _context.ComputerOrder.ToListAsync());
@@ -61,7 +61,7 @@ namespace PladoHPComputerSets.Controllers
         {
 
             var notCompletedOrders = await _context.ComputerOrder
-                .Where(r => r.Packed != null)
+                .Where(r => r.Packed.Equals(false))
                 .ToListAsync();
 
             var completedOrders = await _context.ComputerOrder
@@ -118,6 +118,7 @@ namespace PladoHPComputerSets.Controllers
 
 
         // GET: ComputerOrders/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.ComputerOrder == null)
@@ -146,6 +147,7 @@ namespace PladoHPComputerSets.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,OrdererName,Description,Price,Type,Case,Monitor,Packed")] ComputerOrder computerOrder)
         {
             if (ModelState.IsValid)
@@ -177,6 +179,7 @@ namespace PladoHPComputerSets.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,OrdererName,Description,Price,Type,Case,Monitor,Packed")] ComputerOrder computerOrder)
         {
@@ -209,6 +212,7 @@ namespace PladoHPComputerSets.Controllers
         }
 
         // GET: ComputerOrders/Delete/5
+        [Authorize(Policy = "RequireAdminRole")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.ComputerOrder == null)

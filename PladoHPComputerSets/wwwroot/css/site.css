@@ -14,5 +14,11 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+
+}
+
+.navbar {
+    background-image: url("https://www.color-hex.com/palettes/12989.png");
+    background-repeat: repeat;
 }

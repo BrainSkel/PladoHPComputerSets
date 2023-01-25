@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PladoHPComputerSets.Data;
 
@@ -11,9 +12,10 @@ using PladoHPComputerSets.Data;
 namespace PladoHPComputerSets.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230111190856_addRoles")]
+    partial class addRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,7 +259,7 @@ namespace PladoHPComputerSets.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ComputerOrder", (string)null);
+                    b.ToTable("ComputerOrder");
                 });
 
             modelBuilder.Entity("PladoHPComputerSets.Models.ComputerOrderReview", b =>
@@ -294,7 +296,7 @@ namespace PladoHPComputerSets.Data.Migrations
 
                     b.HasIndex("ComputerOrderReviewId");
 
-                    b.ToTable("ComputerOrderReview", (string)null);
+                    b.ToTable("ComputerOrderReview");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
