@@ -18,10 +18,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<IdentityUser>(options => { options.SignIn.RequireConfirmedAccount = true; })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
+
+builder.Services.AddRazorPages();
 
 builder.Services.AddAuthorization(options =>
 {
@@ -32,41 +33,39 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
-var serviceScope = app.Services.CreateScope();
-var RoleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-var UserManager = serviceScope.ServiceProvider.GetService<UserManager<IdentityUser>>();
-
-string[] roleNames = { "Admin", "Manager", "Member" };
-IdentityResult roleResult;
-
-foreach (var roleName in roleNames)
+using (var _serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope())
 {
-    var roleExist = await RoleManager.RoleExistsAsync(roleName);
-    if (!roleExist)
+    var roleManager = _serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = _serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+    string[] roleNames = { "Admin", "Manager", "Member" };
+
+    var userEmail = builder.Configuration.GetValue<string>("AdminUser:UserEmail");
+    var userPassword = builder.Configuration.GetValue<string>("AdminUser:UserPassword");
+
+
+    // Seed roles
+    foreach (var roleName in roleNames)
     {
-        //create the roles and seed them to the database: Question 1
-        roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+        var roleExists = await roleManager.RoleExistsAsync(roleName);
+        if (roleExists) continue;
+        var roleResult = await roleManager.CreateAsync(new IdentityRole(roleName));
+        if (!roleResult.Succeeded) throw new Exception("Failed to create role: " + roleName);
     }
-}
 
-//Here you could create a super user who will maintain the web app
-var poweruser = new IdentityUser
-{
-    UserName = builder.Configuration["UserName"],
-    Email = builder.Configuration["UserEmail"],
-};
-//Ensure you have these values in your appsettings.json file
-string userPWD = builder.Configuration["UserPassword"];
-var _user = await UserManager.FindByEmailAsync(builder.Configuration["AdminUserEmail"]);
-
-if (_user == null)
-{
-    var createPowerUser = await UserManager.CreateAsync(poweruser, userPWD);
-    if (createPowerUser.Succeeded)
+    // Create new admin user
+    var userExists = await userManager.FindByEmailAsync(userEmail);
+    if (userExists == null)
     {
-        //here we tie the new user to the role
-        await UserManager.AddToRoleAsync(poweruser, "Admin");
-
+        var user = new IdentityUser { UserName = userEmail, Email = userEmail, EmailConfirmed = true, LockoutEnabled = false };
+        var userResult = await userManager.CreateAsync(user, userPassword);
+        if (userResult.Succeeded)
+        {
+            // Assign role
+            var roleResult = await userManager.AddToRoleAsync(user, "Admin");
+            if (!roleResult.Succeeded) throw new Exception("Failed to assign role to user: " + userEmail);
+        }
+        else throw new Exception("Failed to create user: " + userEmail);
     }
 }
 

@@ -10,6 +10,9 @@ namespace PladoHPComputerSets.Models
         [DisplayFormat(NullDisplayText = "Anonymous")]
         [StringLength(20)]
         public string? OrdererName { get; set; }
+        [Display(Name = "Tracking NR")]
+
+        public string TrackingNR { get; set; }
 
         [StringLength(200)]
         public string? Description { get; set; }

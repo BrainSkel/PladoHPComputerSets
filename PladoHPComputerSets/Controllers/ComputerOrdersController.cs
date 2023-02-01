@@ -33,27 +33,30 @@ namespace PladoHPComputerSets.Controllers
               return View(await _context.ComputerOrder.ToListAsync());
         }
 
-        public async Task<IActionResult> TrackOrder(string searchTerm = null)
+        private static Random random = new Random();
+
+
+        public async Task<IActionResult> TrackOrder(string searchTerm = " ")
         {
+             var model = _context.ComputerOrder
+                            .OrderByDescending(r => r.OrdererName)
+                            .Where(r => r.Packed.Equals(false))
+                            .Where( r => searchTerm == null || r.TrackingNR == searchTerm)
+                            .Select(r => new ComputerOrder
+                            {
+                                Id = r.Id,
+                                TrackingNR = r.TrackingNR,
+                                OrdererName = r.OrdererName,
+                                Description = r.Description,
+                                Type = r.Type,
+                                Price = r.Price,
+                                Case = r.Case,
+                                Monitor = r.Monitor,
+                                Packed = r.Packed
 
-            var model = _context.ComputerOrder
-                .OrderByDescending(r => r.OrdererName)
-                .Where(r => r.Packed.Equals(false))
-                .Where( r => searchTerm == null || r.OrdererName.StartsWith(searchTerm))
-                .Select(r => new ComputerOrder
-                {
-                    Id = r.Id,
-                    OrdererName = r.OrdererName,
-                    Description = r.Description,
-                    Type = r.Type,
-                    Price = r.Price,
-                    Case = r.Case,
-                    Monitor = r.Monitor,
-                    Packed = r.Packed
-
-                }
-                );
-            return View(model);
+                            }
+                            );
+                return View(model);
 
         }
 
@@ -266,10 +269,12 @@ namespace PladoHPComputerSets.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateNew([Bind("Id,OrdererName,Description,Price,Type,Case,Monitor,Packed")] ComputerOrder computerOrder)
+        public async Task<IActionResult> CreateNew([Bind("Id,TrackingNR,OrdererName,Description,Price,Type,Case,Monitor,Packed")] ComputerOrder computerOrder)
         {
+
             if (ModelState.IsValid)
             {
+                
                 _context.Add(computerOrder);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(TrackOrder));
