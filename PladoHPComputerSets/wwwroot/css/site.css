@@ -23,7 +23,17 @@ body {
     background-size: cover;
 }
 
+
 .logo {
     width:80px;
     margin:0;
 }
+
+
+
+
+/*.navbar, footer {
+    background-image: url("https://htmlcolorcodes.com/assets/images/html-color-codes-color-tutorials.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}*/

@@ -28,7 +28,7 @@ namespace PladoHPComputerSets.Controllers
 
         // GET: ComputerOrders
         [Authorize(Policy = "RequireAdminRole")]
-        public async Task<IActionResult> Orders()
+        public async Task<IActionResult> Orders(List<ComputerOrder> model)
         {
               return View(await _context.ComputerOrder.ToListAsync());
         }
@@ -41,7 +41,7 @@ namespace PladoHPComputerSets.Controllers
              var model = _context.ComputerOrder
                             .OrderByDescending(r => r.OrdererName)
                             .Where(r => r.Packed.Equals(false))
-                            .Where( r => searchTerm == null || r.TrackingNR == searchTerm)
+                            .Where(r=> r.TrackingNR == searchTerm)
                             .Select(r => new ComputerOrder
                             {
                                 Id = r.Id,
@@ -96,7 +96,7 @@ namespace PladoHPComputerSets.Controllers
                     NotCompletedOrders = notCompletedOrders,
                     TotalOrders = totalOrders,
                     TotalCompletedOrders = totalCompletedOrders
-        };
+                };
 
             return View(result);
         }
@@ -152,7 +152,7 @@ namespace PladoHPComputerSets.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,OrdererName,Description,Price,Type,Case,Monitor,Packed")] ComputerOrder computerOrder)
+        public async Task<IActionResult> Create([Bind("Id,OrdererName,TrackingNR,Description,Price,Type,Case,Monitor,Packed")] ComputerOrder computerOrder)
         {
             if (ModelState.IsValid)
             {
@@ -185,7 +185,7 @@ namespace PladoHPComputerSets.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Orders_Edit(int id, [Bind("Id,OrdererName,Description,Price,Type,Case,Monitor,Packed")] ComputerOrder computerOrder)
+        public async Task<IActionResult> Orders_Edit(int id, [Bind("Id,OrdererName,TrackingNR,Description,Price,Type,Case,Monitor,Packed")] ComputerOrder computerOrder)
         {
             if (id != computerOrder.Id)
             {
